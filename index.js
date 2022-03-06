@@ -195,9 +195,13 @@ $(function() {
       $('.marker-color-control#change-marker-color label').on('click', this.changeMarkerColor.bind(this));
       $('.ctrl #clear').on('click', this.clearAllMarkers.bind(this));
       $('.ctrl #show').on('click', this.showAllMarkers);
-      $('.ctrl #hide').on('click', this.hideAllMarkers);
+      $('.ctrl #hide').on('click', this.hideAllMarkers.bind(this));
 
       this.mapFront.onMouseMove(this.renderCoords.bind(this));
+    }
+
+    hideAllMarkers() {
+      this.markers.hideAllPopovers(true);
     }
 
     clearAllMarkers() {
@@ -374,10 +378,13 @@ $(function() {
       }
     }
 
-    hideAllPopovers() {
+    hideAllPopovers(stateChange = false) {
+      if (!_.isBoolean(stateChange) && stateChange) {
+        stateChange = false;
+      }
       _.forEach(this.markers, (marker) => {
         if (marker.isPopoverShowed) {
-          this.hidePopover(marker, false);
+          this.hidePopover(marker, stateChange);
         }
       });
     }

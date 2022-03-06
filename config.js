@@ -12,6 +12,16 @@ const config = {
     {
       projection: 'EPSG:3857',
       source: new ol.source.OSM({
+        // url: './maps/google/{z}/{x}/{y}.png',
+        url: 'https://b.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
+        crossOrigin: null
+      }),
+      displayName: 'COSM',
+      visible: false
+    },
+    {
+      projection: 'EPSG:3857',
+      source: new ol.source.OSM({
         // url: './maps/openStreetMap/{z}/{x}/{y}.png',
 
         url: 'http://tile.openstreetmap.org/{z}/{x}/{y}.png',
