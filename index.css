@@ -1,0 +1,115 @@
+.form-group {
+    margin-bottom: 5px;
+}
+
+.ol-zoom {
+    top: 10.5em;
+}
+
+.tooltip-inner {
+    max-width: 148px;
+    /* If max-width does not work, try using width instead */
+    width: 148px;
+}
+
+.lonlat.ctrl {
+    margin-left: -65px;
+}
+
+.parent {
+    overflow: hidden;
+    position: absolute;
+    top: 0px;
+    bottom: 0;
+    width: 100%;
+}
+
+.controls-bar {
+    margin-top: 5px;
+}
+
+.ctrl {
+    float: left;
+    margin-left: 15px;
+}
+
+.map {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.btn.btn-primary {
+    z-index: 2;
+}
+
+.positions {
+    z-index: 2;
+    width: 140px;
+    padding-left: 10px;
+    float: left;
+}
+
+.positions.sk-42 {
+    z-index: 2;
+    width: 180px;
+    padding-left: 10px;
+    float: left;
+}
+
+.marker {
+    width: 15px;
+    height: 15px;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    opacity: 0.8;
+    cursor: pointer;
+}
+
+.m-yellow {
+    background-color: #FFFF00;
+}
+
+.m-red {
+    background-color: #FF0000;
+}
+
+.m-green {
+    background-color: #00FF00;
+}
+
+.popover {
+    z-index: 10;
+    min-width: 285px;
+    opacity: 0.9;
+}
+
+
+.popover .popover-body {
+    padding: 5px 5px;
+    min-width: 285px;
+    cursor: default;
+}
+
+.popover .popover-header {
+    padding: 5px 5px;
+}
+
+.popover hr {
+    margin: 2px 0;
+}
+
+.popover .edit-mode {
+    display: none;
+}
+
+.popover .popover-content-top textarea{
+    width: 270px;
+}
+
+.popover-controls a {
+    cursor: pointer;
+    float: right;
+    color: blue;
+    margin-left: 10px;
+}
