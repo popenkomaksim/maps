@@ -8,7 +8,6 @@
 
 .tooltip-inner {
     max-width: 148px;
-    /* If max-width does not work, try using width instead */
     width: 148px;
 }
 
@@ -37,6 +36,21 @@
     height: 100%;
     overflow: hidden;
     position: relative;
+}
+
+.map:-webkit-full-screen {
+    height: 100%;
+    margin: 0;
+}
+.map:-ms-fullscreen {
+    height: 100%;
+}
+.map:fullscreen {
+    height: 100%;
+}
+/* position the rotate control lower than usual */
+.map .ol-rotate {
+    top: 3em;
 }
 
 .btn.btn-primary {

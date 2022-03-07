@@ -12,11 +12,14 @@ $(function() {
       this.init();
     }
 
+
     init() {
       this.map = new ol.Map({
         target: 'map',
+        interactions: ol.interaction.defaults().extend([new ol.interaction.DragRotateAndZoom()]),
         layers: this.layers,
         controls: [
+          new ol.control.Rotate(),
           new ol.control.FullScreen({
             tipLabel: "На веcь екран"
           }),
