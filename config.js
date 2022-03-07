@@ -34,18 +34,18 @@ const config = {
   markersColors: [
     {
       id: 'green',
-      displayName: 'Зелений',
+      displayName: 'Зел',
       colorClass: 'm-green',
       selected: true
     },
     {
       id: 'yellow',
-      displayName: 'Жовтий',
+      displayName: 'Жов',
       colorClass: 'm-yellow'
     },
     {
       id: 'red',
-      displayName: 'Червоний',
+      displayName: 'Чер',
       colorClass: 'm-red',
     },
   ],

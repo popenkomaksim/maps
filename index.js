@@ -138,23 +138,23 @@ $(function() {
 
         <div>
           <div class="input-group input-group-sm mb-3 positions sk-42">
-            <span class="input-group-text">CK42 lon</span>
-            <input type="text" class="form-control" id="lonArmy" placeholder="0кв 0м">
-          </div>
-
-          <div class="input-group input-group-sm mb-3 positions sk-42">
             <span class="input-group-text">CK42 lat</span>
             <input type="text" class="form-control" id="latArmy" placeholder="0кв 0м">
           </div>
 
-          <div class="input-group input-group-sm mb-3 positions">
-            <span class="input-group-text">Lon</span>
-            <input type="text" class="form-control" id="lon" placeholder="lon">
+          <div class="input-group input-group-sm mb-3 positions sk-42">
+            <span class="input-group-text">CK42 lon</span>
+            <input type="text" class="form-control" id="lonArmy" placeholder="0кв 0м">
           </div>
 
           <div class="input-group input-group-sm mb-3 positions">
             <span class="input-group-text">Lat</span>
             <input type="text" class="form-control" id="lat" placeholder="lat">
+          </div>
+
+          <div class="input-group input-group-sm mb-3 positions">
+            <span class="input-group-text">Lon</span>
+            <input type="text" class="form-control" id="lon" placeholder="lon">
           </div>
         </div>
 
@@ -194,10 +194,14 @@ $(function() {
       $('.layers-control#change-layer label').on('click', this.changeLayer.bind(this));
       $('.marker-color-control#change-marker-color label').on('click', this.changeMarkerColor.bind(this));
       $('.ctrl #clear').on('click', this.clearAllMarkers.bind(this));
-      $('.ctrl #show').on('click', this.showAllMarkers);
+      $('.ctrl #show').on('click', this.showAllMarkers.bind(this));
       $('.ctrl #hide').on('click', this.hideAllMarkers.bind(this));
 
       this.mapFront.onMouseMove(this.renderCoords.bind(this));
+    }
+
+    showAllMarkers() {
+      this.markers.showAllPopovers();
     }
 
     hideAllMarkers() {
@@ -285,7 +289,7 @@ $(function() {
 
     addEvents() {
       this.mapFront.onClick(this.addMarkerAfterClick.bind(this));
-      this.mapFront.onMoveEnd(this.showAllPopovers.bind(this));
+      this.mapFront.onMoveEnd(this.showAllSelectedPopovers.bind(this));
       this.mapFront.onMoveStart(this.hideAllPopovers.bind(this));
 
 
@@ -389,11 +393,17 @@ $(function() {
       });
     }
 
-    showAllPopovers() {
+    showAllSelectedPopovers() {
       _.forEach(this.markers, (marker) => {
         if (marker.isPopoverShowed) {
           this.showPopover(marker);
         }
+      });
+    }
+
+    showAllPopovers() {
+      _.forEach(this.markers, (marker) => {
+        this.showPopover(marker);
       });
     }
 
@@ -458,9 +468,9 @@ $(function() {
           </div>
           <div class='popover-content-bottom'>
             <hr>
-            <b> ${coordsCK42[0]} : ${coordsCK42[1]} </b>
+            <b> ${coordsCK42[1]} : ${coordsCK42[0]}  </b>
             <br/>
-            <b> ${coordsWgs84[0].toString().substring(0, 8)} : ${coordsWgs84[1].toString().substring(0, 8)} </b>
+            <b> ${coordsWgs84[1].toString().substring(0, 8)} : ${coordsWgs84[0].toString().substring(0, 8)} </b>
             <br/>
           </div>
 
