@@ -24,7 +24,7 @@ const config = {
       source: new ol.source.OSM({
         // url: './maps/openStreetMap/{z}/{x}/{y}.png',
 
-        url: 'http://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        url: 'https://b.tile.cyclestreets.net/mapnik/{z}/{x}/{y}.png',
         crossOrigin: null
       }),
       displayName: 'OSM',
