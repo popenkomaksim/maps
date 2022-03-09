@@ -8,7 +8,6 @@ const {
 const { download } = require("./utils/download");
 const { writeResult, getResult } = require("./utils/handleResultFile");
 const { coordToTile } = require("./utils/geo");
-const { exit } = require("process");
 
 Array.prototype.unique = function() {
   return this.filter((value, index, self) => self.indexOf(value) === index)
