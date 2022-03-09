@@ -105,7 +105,8 @@ const downloadAll = async () => {
       for (const y of YCoords) {
         const locationParams = { z, x, y };
         const tileId = [z, x, y].join("-");
-        let providers = result[tileId]?.providers ?? [];
+
+        let providers = (result[tileId] && result[tileId].providers) || [];
 
         try {
           const ex = await Promise.all(

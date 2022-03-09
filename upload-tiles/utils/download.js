@@ -2,7 +2,7 @@ const https = require("https");
 const fs = require("fs");
 const { tilesDestDirectory } = require("../constants");
 
-const download = async (resource, locationParams, cb = () => {}) => {
+const download = (resource, locationParams, cb = () => {}) => {
   const {
     fileExt,
     downloadUrlPatter,
@@ -30,6 +30,7 @@ const download = async (resource, locationParams, cb = () => {}) => {
     https.get(
       downloadUrl,
       {
+        timeout: 5000,
         headers: {
           "User-Agent":
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36",
@@ -45,7 +46,9 @@ const download = async (resource, locationParams, cb = () => {}) => {
           reject(err);
         });
       }
-    );
+    ).on('error', (err) => {
+      reject(err);
+    });
   });
 };
 
