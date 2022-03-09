@@ -29,6 +29,17 @@ const config = {
       }),
       displayName: 'OSM',
       visible: true,
+    },
+    {
+      projection: 'EPSG:3857',
+      source: new ol.source.OSM({
+        // url: './maps/openStreetMap/{z}/{x}/{y}.png',
+
+        url: 'https://3.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?apiKey=t_kKKAHgEZ-SCa-v08N8xCchEK_wxxp7dFAmEOpi9hs',
+        crossOrigin: null
+      }),
+      displayName: 'HERE',
+      visible: false,
     }
   ],
   markersColors: [
