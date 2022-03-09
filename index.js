@@ -22,7 +22,10 @@ $(function() {
           new ol.control.FullScreen({
             tipLabel: "На веcь екран"
           }),
-          new ol.control.Zoom(),
+          new ol.control.Zoom({
+            zoomInTipLabel: "Більше",
+            zoomOutTipLabel: "Меньше"
+          }),
           new ol.control.ScaleLine(),
         ],
         view: new ol.View({
@@ -557,9 +560,7 @@ $(function() {
 
       $(markerMapElement).attr('data-bs-original-title', marker.title || 'Ввeдіть тайтл');
       $(markerMapElement).on('click', (function(e) {
-        if (this.active) {
-          this.showPopover(marker);
-        }
+        this.showPopover(marker);
       }).bind(this));
     }
 
