@@ -1,0 +1,5 @@
+.idea
+node-modules/
+result.json
+tiles-dest/
+package-lock.json

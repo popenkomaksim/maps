@@ -1,0 +1,16 @@
+{
+  "name": "upload-tiles",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "calculateChunks": "node calculateChunks.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash.times": "^4.3.2",
+    "minimist": "^1.2.5"
+  }
+}
