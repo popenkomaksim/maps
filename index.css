@@ -61,15 +61,30 @@
 .positions {
     z-index: 2;
     width: 140px;
-    padding-left: 10px;
+    padding-left: 5px;
     float: left;
+}
+
+.positions input {
+    padding-left: 5px !important;
+    padding-right: 5px !important;
 }
 
 .positions.sk-42 {
     z-index: 2;
-    width: 180px;
-    padding-left: 10px;
+    width: 160px;
+    padding-left: 5px;
     float: left;
+}
+
+.positions.sk-42 input {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.positions.sk-42 span {
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .marker {

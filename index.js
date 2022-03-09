@@ -12,7 +12,6 @@ $(function() {
       this.init();
     }
 
-
     init() {
       this.map = new ol.Map({
         target: 'map',
@@ -23,18 +22,14 @@ $(function() {
           new ol.control.FullScreen({
             tipLabel: "На веcь екран"
           }),
-          new ol.control.Zoom({
-            zoomInTipLabel: "Більше",
-            zoomOutTipLabel: "Меньше"
-          }),
+          new ol.control.Zoom(),
           new ol.control.ScaleLine(),
         ],
         view: new ol.View({
           center: ol.proj.transform(this.center, 'EPSG:4326', 'EPSG:3857'),
           zoom: this.defaultZoom
-        })
+        }),
       });
-
 
       $('.ol-zoom-in, .ol-zoom-out').tooltip({
         placement: 'right',
@@ -98,6 +93,22 @@ $(function() {
       this.layers[index].setVisible(true);
     }
 
+    addLayer(layer) {
+      this.map.addLayer(layer);
+    }
+
+    pointermove(callback) {
+      this.map.once('pointermove', callback);
+    }
+
+    addInteraction(interaction) {
+      this.map.addInteraction(interaction);
+    }
+
+    removeInteraction(interaction) {
+      this.map.removeInteraction(interaction);
+    }
+
     createMarker(el, coords) {
       const marker = new ol.Overlay({
         element: el,
@@ -116,11 +127,14 @@ $(function() {
   }
 
   class MapControls {
-    constructor(mapFront, markers, config) {
+    constructor(mapFront, markers, measure, config) {
       this.mapFront = mapFront;
       this.markers = markers;
+      this.measure = measure;
 
       this.render();
+
+      this.setMarkerMode();
     }
 
     __getLayerDisplayName(layer) {
@@ -161,6 +175,10 @@ $(function() {
           </div>
         </div>
 
+        <div class="ctrl btn-group measure-control">
+          <button type="button" id="measure" class="btn btn-primary btn-sm">Вимір.</button>
+        </div>
+
         <div class="ctrl btn-group marker-color-control" id="change-marker-color" data-toggle="buttons">
         </div>
       `);
@@ -193,12 +211,38 @@ $(function() {
       this.addEvents();
     }
 
+    setMarkerMode() {
+      this.measure.setActive(false);
+      this.markers.setActive(true);
+
+      $('.measure-control #measure').text('Вимір.');
+    }
+
+    setMeasureMode() {
+      this.measure.setActive(true);
+      this.markers.setActive(false);
+
+      $('.measure-control #measure').text('Маркер.');
+    }
+
+    toggleMeasureMarkerMode() {
+      console.log(this.markers.active);
+
+      if (this.markers.active) {
+        this.setMeasureMode();
+      } else {
+        this.setMarkerMode();
+      }
+    }
+
     addEvents() {
       $('.layers-control#change-layer label').on('click', this.changeLayer.bind(this));
       $('.marker-color-control#change-marker-color label').on('click', this.changeMarkerColor.bind(this));
       $('.ctrl #clear').on('click', this.clearAllMarkers.bind(this));
       $('.ctrl #show').on('click', this.showAllMarkers.bind(this));
       $('.ctrl #hide').on('click', this.hideAllMarkers.bind(this));
+
+      $('.measure-control #measure').on('click', this.toggleMeasureMarkerMode.bind(this));
 
       this.mapFront.onMouseMove(this.renderCoords.bind(this));
     }
@@ -261,8 +305,6 @@ $(function() {
       $('#latArmy').val(coords[1]);
     }
   }
-
-
   class Markers {
     LOCAL_STORAGE_KEY = 'maps-markers';
 
@@ -410,7 +452,14 @@ $(function() {
       });
     }
 
+    setActive(bool) {
+      this.active = bool;
+    }
+
     addMarkerAfterClick(event) {
+      if (!this.active) {
+        return false;
+      }
       const coords = event.coordinate;
       this.createMarker({ coords, colorId: this.selectedColor.id });
     }
@@ -508,7 +557,9 @@ $(function() {
 
       $(markerMapElement).attr('data-bs-original-title', marker.title || 'Ввeдіть тайтл');
       $(markerMapElement).on('click', (function(e) {
-        this.showPopover(marker);
+        if (this.active) {
+          this.showPopover(marker);
+        }
       }).bind(this));
     }
 
@@ -579,8 +630,262 @@ $(function() {
     }
   }
 
-  const mapFront = new MapFront(config);
+  class MeasureVector {
+    constructor(mapFront) {
+      this.mapFront = mapFront;
 
+      this.showSegments = true;
+      this.clearPrevious = true;
+      this.tipPoint = undefined;
+
+      this.initStyles();
+
+      this.source = new ol.source.Vector();
+      this.modify = new ol.interaction.Modify({source: this.source, style: this.modifyStyle});
+
+      this.initMap();
+      this.addInteraction();
+    }
+
+    initMap() {
+      const vector = new ol.layer.Vector({
+        source: this.source,
+        style: (feature) => {
+          return this.styleFunction(feature, this.showSegments);
+        },
+      });
+
+      this.mapFront.addLayer(vector);
+      this.mapFront.addInteraction(this.modify);
+    }
+
+    initStyles() {
+      this.style = new ol.style.Style({
+        fill: new ol.style.Fill({
+          color: 'rgba(255, 255, 255, 0.2)',
+        }),
+        stroke: new ol.style.Stroke({
+          color: 'rgba(0, 0, 0, 0.5)',
+          lineDash: [10, 10],
+          width: 2,
+        }),
+        image: new ol.style.Circle({
+          radius: 5,
+          stroke: new ol.style.Stroke({
+            color: 'rgba(0, 0, 0, 0.7)',
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 0.2)',
+          }),
+        }),
+      });
+
+      this.labelStyle = new ol.style.Style({
+        text: new ol.style.Text({
+          font: '14px Calibri,sans-serif',
+          fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 1)',
+          }),
+          backgroundFill: new ol.style.Fill({
+            color: 'rgba(0, 0, 0, 0.7)',
+          }),
+          padding: [3, 3, 3, 3],
+          textBaseline: 'bottom',
+          offsetY: -15,
+        }),
+        image: new ol.style.RegularShape({
+          radius: 8,
+          points: 3,
+          angle: Math.PI,
+          displacement: [0, 10],
+          fill: new ol.style.Fill({
+            color: 'rgba(0, 0, 0, 0.7)',
+          }),
+        }),
+      });
+
+      this.tipStyle = new ol.style.Style({
+        text: new ol.style.Text({
+          font: '12px Calibri,sans-serif',
+          fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 1)',
+          }),
+          backgroundFill: new ol.style.Fill({
+            color: 'rgba(0, 0, 0, 0.4)',
+          }),
+          padding: [2, 2, 2, 2],
+          textAlign: 'left',
+          offsetX: 15,
+        }),
+      });
+
+      this.modifyStyle = new ol.style.Style({
+        image: new ol.style.Circle({
+          radius: 5,
+          stroke: new ol.style.Stroke({
+            color: 'rgba(0, 0, 0, 0.7)',
+          }),
+          fill: new ol.style.Fill({
+            color: 'rgba(0, 0, 0, 0.4)',
+          }),
+        }),
+        text: new ol.style.Text({
+          text: 'Перетащіть для змінення',
+          font: '12px Calibri,sans-serif',
+          fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 1)',
+          }),
+          backgroundFill: new ol.style.Fill({
+            color: 'rgba(0, 0, 0, 0.7)',
+          }),
+          padding: [2, 2, 2, 2],
+          textAlign: 'left',
+          offsetX: 15,
+        }),
+      });
+
+      this.segmentStyle = new ol.style.Style({
+        text: new ol.style.Text({
+          font: '12px Calibri,sans-serif',
+          fill: new ol.style.Fill({
+            color: 'rgba(255, 255, 255, 1)',
+          }),
+          backgroundFill: new ol.style.Fill({
+            color: 'rgba(0, 0, 0, 0.4)',
+          }),
+          padding: [2, 2, 2, 2],
+          textBaseline: 'bottom',
+          offsetY: -12,
+        }),
+        image: new ol.style.RegularShape({
+          radius: 6,
+          points: 3,
+          angle: Math.PI,
+          displacement: [0, 8],
+          fill: new ol.style.Fill({
+            color: 'rgba(0, 0, 0, 0.4)',
+          }),
+        }),
+      });
+
+      this.segmentStyles = [this.segmentStyle];
+    }
+
+    formatLength(line) {
+      const length = ol.sphere.getLength(line);
+      let output;
+      if (length > 100) {
+        output = Math.round((length / 1000) * 100) / 100 + ' km';
+      } else {
+        output = Math.round(length * 100) / 100 + ' m';
+      }
+      return output;
+    }
+
+
+    styleFunction(feature, segments, drawType, tip) {
+      const styles = [this.style];
+      const geometry = feature.getGeometry();
+      const type = geometry.getType();
+      let point, label, line;
+      if (!drawType || drawType === type) {
+        point = new ol.geom.Point(geometry.getLastCoordinate());
+        label = this.formatLength(geometry);
+        line = geometry;
+      }
+      if (segments && line) {
+        let count = 0;
+        line.forEachSegment((a, b) => {
+          const segment = new ol.geom.LineString([a, b]);
+          const label = this.formatLength(segment);
+          if (this.segmentStyles.length - 1 < count) {
+            this.segmentStyles.push(this.segmentStyle.clone());
+          }
+          const segmentPoint = new ol.geom.Point(segment.getCoordinateAt(0.5));
+          this.segmentStyles[count].setGeometry(segmentPoint);
+          this.segmentStyles[count].getText().setText(label);
+          styles.push(this.segmentStyles[count]);
+          count++;
+        });
+      }
+      if (label) {
+        this.labelStyle.setGeometry(point);
+        this.labelStyle.getText().setText(label);
+        styles.push(this.labelStyle);
+      }
+      if (
+        tip &&
+        type === 'Point' &&
+        !this.modify.getOverlay().getSource().getFeatures().length
+      ) {
+        this.tipPoint = geometry;
+        this.tipStyle.getText().setText(tip);
+        styles.push(this.tipStyle);
+      }
+      return styles;
+    }
+
+    addInteraction() {
+      const drawType = 'LineString';
+      this.activeTip = 'Клікніть для продовження лініі';
+      this.idleTip = 'Клікніть для початку вимірювання';
+      this.tip = this.idleTip;
+
+      const self = this;
+      this.draw = new ol.interaction.Draw({
+        source: this.source,
+        type: drawType,
+        style: function (feature) {
+          return self.styleFunction(feature, self.showSegments, drawType, self.tip);
+        },
+      });
+
+      this.draw.on('drawstart', this.drawstart.bind(this));
+      this.draw.on('drawend', this.drawend.bind(this));
+
+      this.modify.setActive(true);
+      this.mapFront.addInteraction(this.draw);
+    }
+
+    removeInteraction() {
+      this.modify.setActive(false);
+      this.mapFront.removeInteraction(this.draw);
+    }
+
+    setActive(bool) {
+      if (bool) {
+        this.addInteraction();
+      } else {
+        this.removeInteraction();
+      }
+    }
+
+    drawstart() {
+      if (this.clearPrevious) {
+        this.source.clear();
+      }
+      this.modify.setActive(false);
+      this.tip = this.activeTip;
+    }
+
+    drawend() {
+      this.modifyStyle.setGeometry(this.tipPoint);
+      this.modify.setActive(true);
+
+      this.mapFront.pointermove(this.pointermove.bind(this));
+      this.tip = this.idleTip;
+    }
+
+    pointermove() {
+      this.modifyStyle.setGeometry();
+    }
+  }
+
+  const mapFront = new MapFront(config);
   const markers = new Markers(mapFront, config);
-  new MapControls(mapFront, markers, config);
+
+  const measure = new MeasureVector(mapFront);
+
+  new MapControls(mapFront, markers, measure, config);
+
 });
