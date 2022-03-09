@@ -1,5 +1,5 @@
 .idea
-node-modules/
+node_modules/
 result.json
 tiles-dest/
 package-lock.json

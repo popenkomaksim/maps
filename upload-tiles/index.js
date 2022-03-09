@@ -8,6 +8,7 @@ const {
 const { download } = require("./utils/download");
 const { writeResult, getResult } = require("./utils/handleResultFile");
 const { coordToTile } = require("./utils/geo");
+const { exit } = require("process");
 
 Array.prototype.unique = function() {
   return this.filter((value, index, self) => self.indexOf(value) === index)
@@ -50,11 +51,10 @@ function isFloatPoint({x, y}) {
 }
 
 const argv = require('minimist')(process.argv.slice(2));
-
 if (argv['bbox']) {
-  const coords = argv['bbox'].split(',')
-  for(const i in coords) {
-    coords[i] = coords[i].indexOf(',') > 0 ? parseFloat(coords[i]) : parseInt(coords[i]);
+  const coords = argv['bbox'].split(',');
+  for(let i = 0; i < coords.length; i++) {
+    coords[i] = coords[i].indexOf('.') > 0 ? parseFloat(coords[i]) : parseInt(coords[i]);
   }
   params.startCoords = {
     topLeft: { x: coords[0], y: coords[1] },
