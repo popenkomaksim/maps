@@ -1,6 +1,7 @@
 const https = require("https");
 const fs = require("fs");
 const { tilesDestDirectory } = require("../constants");
+const { log } = require("./common");
 
 const download = (resource, locationParams, cb = () => {}) => {
   const {
@@ -27,7 +28,7 @@ const download = (resource, locationParams, cb = () => {}) => {
   return new Promise((resolve, reject) => {
     const file = fs.createWriteStream(dest);
 
-    console.log(`Downloading file by URL ${downloadUrl} to dest ${dest}`);
+    log(`[${(new Date()).toJSON()}] Downloading file by URL ${downloadUrl} to dest ${dest}`);
 
     https.get(
       downloadUrl,
