@@ -731,7 +731,7 @@ $(function() {
           }),
         }),
         text: new ol.style.Text({
-          text: 'Перетащіть для змінення',
+          text: 'Перетягніть для зміни',
           font: '12px Calibri,sans-serif',
           fill: new ol.style.Fill({
             color: 'rgba(255, 255, 255, 1)',
@@ -828,8 +828,8 @@ $(function() {
 
     addInteraction() {
       const drawType = 'LineString';
-      this.activeTip = 'Клікніть длѝ продовженнѝ лініі';
-      this.idleTip = 'Клікніть длѝ початку вимірюваннѝ';
+      this.activeTip = 'Клікніть для продовження лінії';
+      this.idleTip = 'Клікніть для початку вимірювання';
       this.tip = this.idleTip;
 
       const self = this;
