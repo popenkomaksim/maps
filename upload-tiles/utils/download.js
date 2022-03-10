@@ -28,7 +28,7 @@ const download = (resource, locationParams, cb = () => {}) => {
   return new Promise((resolve, reject) => {
     const file = fs.createWriteStream(dest);
 
-    log(`[${(new Date()).toJSON()}] Downloading file by URL ${downloadUrl} to dest ${dest}`);
+    log(`Downloading file by URL ${downloadUrl} to dest ${dest}`);
 
     https.get(
       downloadUrl,
