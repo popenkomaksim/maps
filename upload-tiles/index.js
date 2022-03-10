@@ -101,7 +101,8 @@ const downloadAll = async () => {
 
     const XCoords = fillCoordsArr(topLeftCoords.x, bottomRightCoords.x);
     const YCoords = fillCoordsArr(topLeftCoords.y, bottomRightCoords.y);
-
+    const totaltiles = XCoords.length * YCoords.length;
+    let count = 0;
     for (const x of XCoords) {
       for (const y of YCoords) {
         const locationParams = { z, x, y };
@@ -116,6 +117,8 @@ const downloadAll = async () => {
           for (const e of ex) {
             providers.push(e.resource.name);
           }
+          count++;
+          log(`Done: ${totaltiles}/${count} (${((count/totaltiles)*100).toFixed(2)}%)`)
         } catch (err) {
           error(err);
         }
