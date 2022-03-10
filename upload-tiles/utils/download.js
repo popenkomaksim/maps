@@ -17,7 +17,9 @@ const download = (resource, locationParams, cb = () => {}) => {
   }
   //if file is there - skip
   if (fs.existsSync(dest)) {
-    return;
+    return new Promise((resolve) => {
+      resolve({resource, coords: { x, y, z }});
+    })
   }
 
   const downloadUrl = downloadUrlPatter(locationParams);

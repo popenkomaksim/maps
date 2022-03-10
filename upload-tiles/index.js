@@ -113,7 +113,7 @@ const downloadAll = async () => {
             resources.map((resource) => download(resource, locationParams))
           );
           for (const e of ex) {
-            providers.push(e.name);
+            providers.push(e.resource.name);
           }
         } catch (err) {
           console.log(err);

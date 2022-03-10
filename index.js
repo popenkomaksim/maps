@@ -828,8 +828,8 @@ $(function() {
 
     addInteraction() {
       const drawType = 'LineString';
-      this.activeTip = 'Клікніть для продовження лініі';
-      this.idleTip = 'Клікніть для початку вимірювання';
+      this.activeTip = 'Клікніть длѝ продовженнѝ лініі';
+      this.idleTip = 'Клікніть длѝ початку вимірюваннѝ';
       this.tip = this.idleTip;
 
       const self = this;
