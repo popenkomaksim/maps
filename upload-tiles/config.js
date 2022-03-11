@@ -48,8 +48,8 @@ const params = {
     {
       name: "OSM",
       downloadUrlPatter: (() => {
-        const cdn = new RoundRobin(['a', 'b', 'c'])
-        return ({ z, y, x }) => `https://${cdn.next()}.tile.cyclestreets.net/mapnik/${z}/${x}/${y}.png`
+        // const cdn = new RoundRobin(['a', 'b', 'c'])
+        return ({ z, y, x }) => `https://tile.openstreetmap.org/${z}/${x}/${y}.png`//https://${cdn.next()}.tile.cyclestreets.net/mapnik/${z}/${x}/${y}.png`
       })(),
       fileExt: "png",
     },
