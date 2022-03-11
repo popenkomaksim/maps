@@ -45,7 +45,7 @@ const download = (resource, locationParams, cb = () => {}) => {
           if (response.statusCode == 404) {
             return resolve({resource, coords: { x, y, z }});
           }
-          fs.rm(dest);
+          fs.rm(dest, { force: true }, (e)=>{});
           return reject(`${downloadUrl} resulted in ${response.statusCode}`);
         }
         response.pipe(file);
@@ -55,13 +55,13 @@ const download = (resource, locationParams, cb = () => {}) => {
         });
         file.on("error", function (err) {
           file.close(cb);
-          fs.rm(dest);
+          fs.rm(dest, { force: true }, (e)=>{});
           reject(err);
         });
       }
     ).on('error', (err) => {
       file.close(cb);
-      fs.rm(dest);
+      fs.rm(dest, { force: true }, (e)=>{});
       reject(err);
     });
   });
