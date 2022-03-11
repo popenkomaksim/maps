@@ -1,20 +1,18 @@
 #!/bin/bash
-function scan {
-    echo "scanning $1"
-    for f in $(find $1 -type f); do 
-        if [ ! -z "$(magick identify -regard-warnings $f 2>&1 > /dev/null)" ]; then 
-            size=$(wc -c <"$f")
-            is404=$(grep -c 'Error 404 (Not Found)' $f)
-            if [ $size -eq 0 ]; then
-                echo "$f is empty"
-            fi
-            if [ $is404 -eq 0 ] && [ $size -gt 0 ]; then 
-                rm $f
-                echo "removing $f"; 
-            fi
+function checkFile {
+    if [ ! -z "$(magick identify -regard-warnings $1 2>&1 > /dev/null)" ]; then 
+        size=$(wc -c <"$1")
+        is404=$(grep -c 'Error 404 (Not Found)' $1)
+        if [ $size -eq 0 ]; then
+            echo "$1 is empty"
         fi
-    done
+        if [ $is404 -eq 0 ] && [ $size -gt 0 ]; then 
+            rm $1
+            echo "removing $1"; 
+        fi
+    fi
 }
+
 trap 'killall' INT
 
 killall() {
@@ -24,7 +22,16 @@ killall() {
     wait
     echo DONE
 }
-for d in $(ls ./tiles-dest); do
-    scan "./tiles-dest/$d" &
-done
+function main {
+    nfiles=0
+    for d in $(ls ./tiles-dest); do
+        for f in $(find "./tiles-dest/$d" -type f); do
+            if test "$(jobs | wc -l)" -ge 64; then
+                wait -n
+            fi
+            checkFile $f &
+        done
+    done
+}
+main &
 wait
