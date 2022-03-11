@@ -31,12 +31,12 @@ const params = {
       })(),
       fileExt: "png",
     },
-    {
-      name: "GS",
-      downloadUrlPatter: ({ z, y, x }) =>
-        `https://khms0.googleapis.com/kh?v=${GS_API_VERSION}&z=${z}&x=${x}&y=${y}`,
-      fileExt: "jpeg",
-    },
+    // {
+    //  name: "GS",
+    //  downloadUrlPatter: ({ z, y, x }) =>
+    //    `https://khms0.googleapis.com/kh?v=${GS_API_VERSION}&z=${z}&x=${x}&y=${y}`,
+    //  fileExt: "jpeg",
+    // },
     {
       name: "COSM",
       downloadUrlPatter: (() => {
