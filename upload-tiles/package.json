@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "compress": "node compress.js",
     "start": "node index.js",
     "calculateChunks": "node calculateChunks.js"
   },
@@ -11,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "lodash.times": "^4.3.2",
-    "minimist": "^1.2.5"
+    "lodash": "^4.17.15",
+    "minimist": "^1.2.5",
+    "glob": "^7.2.0"
   }
 }
