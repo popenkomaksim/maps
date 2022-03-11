@@ -117,10 +117,11 @@ const downloadAll = async () => {
           for (const e of ex) {
             providers.push(e.resource.name);
           }
-          count++;
-          log(`Done: ${totaltiles}/${count} (${((count/totaltiles)*100).toFixed(2)}%)`)
         } catch (err) {
           error(err);
+        } finally {
+          count++;
+          log(`Done: (${((count/totaltiles)*100).toFixed(2)}%) ${count}/${totaltiles}`)
         }
 
         result[tileId] = {
