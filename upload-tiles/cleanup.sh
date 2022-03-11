@@ -29,6 +29,8 @@ function main {
             if test "$(jobs | wc -l)" -ge 64; then
                 wait -n
             fi
+            ((nfiles+=1))
+            echo -ne "$nfiles%\033[0K\r"
             checkFile $f &
         done
     done
