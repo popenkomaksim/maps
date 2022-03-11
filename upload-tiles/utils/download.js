@@ -42,6 +42,9 @@ const download = (resource, locationParams, cb = () => {}) => {
       function (response) {
         if (response.statusCode > 200){
           file.close(cb);
+          if (response.statusCode == 404) {
+            return resolve({resource, coords: { x, y, z }});
+          }
           fs.rm(dest);
           return reject(`${downloadUrl} resulted in ${response.statusCode}`);
         }
