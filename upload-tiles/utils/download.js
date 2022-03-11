@@ -45,7 +45,7 @@ const download = (resource, locationParams, cb = () => {}) => {
           if (response.statusCode == 404) {
             return resolve({resource, coords: { x, y, z }});
           }
-          fs.rm(dest, { force: true }, (e)=>{});
+          (fs.rm && fs.rm(dest, { force: true }, (e)=>{})) || (fs.unlink && fs.unlink(dest, ()=>{}))
           return reject(`${downloadUrl} resulted in ${response.statusCode}`);
         }
         response.pipe(file);
