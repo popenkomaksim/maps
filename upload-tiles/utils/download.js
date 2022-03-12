@@ -41,10 +41,12 @@ const download = (resource, locationParams, cb = () => {}) => {
       },
       function (response) {
         if (response.statusCode > 200){
-          file.close(cb);
           if (response.statusCode == 404) {
+            file.write('Error 404 (Not Found)');
+            file.close(cb);
             return resolve({resource, coords: { x, y, z }});
           }
+          file.close(cb);
           rm(dest);
           return reject(`${downloadUrl} resulted in ${response.statusCode}`);
         }
