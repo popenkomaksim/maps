@@ -43,7 +43,7 @@ const params = {
     //    `https://khms0.googleapis.com/kh?v=${GS_API_VERSION}&z=${z}&x=${x}&y=${y}`,
     //  fileExt: "jpeg",
     // },
-//     {
+     {
 //       name: "COSM",
 //       downloadUrlPatter: (() => {
 //         const cdn = new RoundRobin(['a', 'b', 'c'])
@@ -62,6 +62,7 @@ const params = {
   ],
   minZoomLevel: 5,
   startZoomLevel: 18,
+  coordsLevel: 18,
   delay: 0,// milliseconds
   // please put you coords config here:
   startCoords: undefined,
