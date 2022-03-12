@@ -5,6 +5,8 @@ const { log } = require("./common");
 const { setFlagsFromString } = require("v8");
 const path = require("path");
 
+const notFound = 'Error 404 (Not Found)';
+
 const download = (resource, locationParams, cb = () => {}) => {
   const {
     fileExt,
@@ -19,10 +21,20 @@ const download = (resource, locationParams, cb = () => {}) => {
     fs.mkdirSync(dir, { recursive: true });
   }
   //if file is there - skip
-  if (fs.existsSync(dest)) {
-    return new Promise((resolve) => {
-      resolve({resource, coords: { x, y, z }});
-    })
+  const checks = [
+    dest,
+    `${dir}/${y}.jpeg`,
+    `${dir}/${y}.jpg`
+  ];
+  for (let check of checks) {
+    if (fs.existsSync(check)) {
+      const content = fs.readFileSync(check);
+      if (content.toString() == notFound || content.length > 0) {
+        return new Promise((resolve) => {
+          resolve({resource, coords: { x, y, z }});
+        })
+      }
+    }
   }
 
   const downloadUrl = downloadUrlPatter(locationParams);
@@ -41,10 +53,12 @@ const download = (resource, locationParams, cb = () => {}) => {
       },
       function (response) {
         if (response.statusCode > 200){
-          file.close(cb);
           if (response.statusCode == 404) {
+            file.write(notFound);
+            file.close(cb);
             return resolve({resource, coords: { x, y, z }});
           }
+          file.close(cb);
           rm(dest);
           return reject(`${downloadUrl} resulted in ${response.statusCode}`);
         }

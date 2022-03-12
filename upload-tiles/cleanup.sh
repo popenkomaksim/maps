@@ -1,12 +1,8 @@
 #!/bin/bash
 function checkFile {
-    if [ ! -z "$(magick identify -regard-warnings $1 2>&1 > /dev/null)" ]; then 
-        size=$(wc -c <"$1")
+    if [ ! -z "$(identify -regard-warnings $1 2>&1 > /dev/null)" ]; then 
         is404=$(grep -c 'Error 404 (Not Found)' $1)
-        if [ $size -eq 0 ]; then
-            echo "$1 is empty"
-        fi
-        if [ $is404 -eq 0 ] && [ $size -gt 0 ]; then 
+        if [ $is404 -eq 0 ]; then 
             rm $1
             echo "removing $1"; 
         fi

@@ -112,7 +112,9 @@ const downloadAll = async () => {
 
         try {
           const ex = await Promise.all(
-            resources.map((resource) => download(resource, locationParams))
+            resources
+            .filter(resource => providers.indexOf(resource.name) < 0)
+            .map((resource) => download(resource, locationParams))
           );
           for (const e of ex) {
             providers.push(e.resource.name);
