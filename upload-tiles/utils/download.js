@@ -19,7 +19,7 @@ const download = (resource, locationParams, cb = () => {}) => {
     fs.mkdirSync(dir, { recursive: true });
   }
   //if file is there - skip
-  if (fs.existsSync(dest)) {
+  if (fs.existsSync(dest) || fs.existsSync(`${dir}/${y}.jpeg`) || fs.existsSync(`${dir}/${y}.jpg`)) {
     return new Promise((resolve) => {
       resolve({resource, coords: { x, y, z }});
     })
