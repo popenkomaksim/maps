@@ -22,7 +22,7 @@ const download = (resource, locationParams, cb = () => {}) => {
   }
   //if file is there - skip
   const checks = [
-    dest
+    dest,
     `${dir}/${y}.jpeg`,
     `${dir}/${y}.jpg`
   ];
