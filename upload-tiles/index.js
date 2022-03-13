@@ -9,6 +9,7 @@ const { download } = require("./utils/download");
 const { writeResult, getResult } = require("./utils/handleResultFile");
 const { coordToTile } = require("./utils/geo");
 const { log, error } = require("./utils/common");
+const _ = require('lodash');
 
 Array.prototype.unique = function() {
   return this.filter((value, index, self) => self.indexOf(value) === index)
@@ -38,6 +39,7 @@ for (const res of params.resources) {
             result[id].providers = [];
           }
           result[id].providers.push(res.name);
+          result[id].providers = _.uniq(result[id].providers);
         }
       }
     }
@@ -128,7 +130,7 @@ const downloadAll = async () => {
 
         result[tileId] = {
           id: tileId,
-          providers: providers.unique(),
+          providers: _.uniq(providers),
         };
       }
     }
