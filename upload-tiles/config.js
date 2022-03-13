@@ -37,14 +37,14 @@ const params = {
     //    `https://khms0.googleapis.com/kh?v=${GS_API_VERSION}&z=${z}&x=${x}&y=${y}`,
     //  fileExt: "jpeg",
     // },
-    {
-      name: "COSM",
-      downloadUrlPatter: (() => {
-        const cdn = new RoundRobin(['a', 'b', 'c'])
-        return ({ z, y, x }) => `https://${cdn.next()}.tile-cyclosm.openstreetmap.fr/cyclosm/${z}/${x}/${y}.png`
-      })(),
-      fileExt: "png",
-    },
+//     {
+//       name: "COSM",
+//       downloadUrlPatter: (() => {
+//         const cdn = new RoundRobin(['a', 'b', 'c'])
+//         return ({ z, y, x }) => `https://${cdn.next()}.tile-cyclosm.openstreetmap.fr/cyclosm/${z}/${x}/${y}.png`
+//       })(),
+//       fileExt: "png",
+//     },
     {
       name: "OSM",
       downloadUrlPatter: (() => {
