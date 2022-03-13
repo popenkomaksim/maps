@@ -1,6 +1,5 @@
 const glob = require('glob');
 const { tilesDestDirectory } = require('./constants');
-const { params } = require('./config');
 const fs = require('fs');
 const _ = require('lodash');
 
@@ -75,17 +74,44 @@ const compressFiles = async (files, quality, type) => {
   }
 }
 
-const main = async () => {
-  const { startZoomLevel, minZoomLevel } = params;
+const getFolders = (path) => {
+  return new Promise((resolve) => {
+    fs.readdir(path, (err, list) => {
+      if (err) {
+        console.log(err);
+        return resolve([]);
+      }
 
-  for(let i = startZoomLevel; i >= minZoomLevel; i--) {
-    let files = await getDirectories(`./${tilesDestDirectory}/HERE/${i}`);
-    await compressFiles(files, 60, '.png');
+      list = list.filter((folder) => {
+        return !folder.includes('.');
+      });
+
+      return resolve(list);
+    });
+  });
+}
+
+const main = async () => {
+  const herePath = `./${tilesDestDirectory}/HERE`;
+  const hereZoomFolders = await getFolders(`${herePath}`);
+
+  for(const zoomFolder of hereZoomFolders) {
+    const folders = await getFolders(`${herePath}/${zoomFolder}`);
+    for(const yFolder of folders) {
+      const files = await getDirectories(`${herePath}/${zoomFolder}/${yFolder}`);
+      await compressFiles(files, 60, '.png');
+    }
   }
 
-  for(let i = startZoomLevel; i >= minZoomLevel; i--) {
-    files = await getDirectories(`./${tilesDestDirectory}/GS/${i}`);
-    await compressFiles(files, 60, '.jpeg');
+  const gsPath = `./${tilesDestDirectory}/GS`;
+  const gsZoomFolders = await getFolders(`${gsPath}`);
+
+  for(const zoomFolder of gsZoomFolders) {
+    const folders = await getFolders(`${gsPath}/${zoomFolder}`);
+    for(const yFolder of folders) {
+      const files = await getDirectories(`${gsPath}/${zoomFolder}/${yFolder}`);
+      await compressFiles(files, 60, '.png');
+    }
   }
 };
 
