@@ -1,5 +1,6 @@
 const glob = require('glob');
 const { tilesDestDirectory } = require('./constants');
+const { minZoomLevel, startZoomLevel } = require('./config');
 const fs = require('fs');
 const _ = require('lodash');
 
@@ -44,7 +45,7 @@ const rm = (dest) => {
   (fs.rm && fs.rm(dest, { force: true }, (e)=>{})) || (fs.unlink && fs.unlink(dest, ()=>{}))
 }
 
-const compressPng = async (path, quality = '40', type = '.png') => {
+const compressFile = async (path, quality = '40', type = '.png') => {
   const filePathSplit = path.split(type);
   const filePathWithoutType = filePathSplit[0];
 
@@ -64,21 +65,26 @@ const compressPng = async (path, quality = '40', type = '.png') => {
   return true;
 }
 
-const compress = async (files, quality, type) => {
+const compressFiles = async (files, quality, type) => {
   const chunks = _.chunk(files, 10);
 
   for(let chunk of chunks) {
     await Promise.all(_.map(chunk, (file) => {
-      return compressPng(file, quality, type);
+      return compressFile(file, quality, type);
     }));
   }
 }
 
 const main = async () => {
-  let files = await getDirectories(`./${tilesDestDirectory}/HERE`);
-  await compress(files, 60, '.png');
-  files = await getDirectories(`./${tilesDestDirectory}/GS`);
-  await compress(files, 60, '.jpeg');
+  for(let i = startZoomLevel; startZoomLevel >= minZoomLevel; i--) {
+    let files = await getDirectories(`./${tilesDestDirectory}/HERE/${i}`);
+    await compressFiles(files, 60, '.png');
+  }
+
+  for(let i = startZoomLevel; startZoomLevel >= minZoomLevel; i--) {
+    files = await getDirectories(`./${tilesDestDirectory}/GS/${i}`);
+    await compressFiles(files, 60, '.jpeg');
+  }
 };
 
 main();

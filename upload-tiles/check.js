@@ -1,4 +1,3 @@
-const { writeResult, getResult } = require("./utils/handleResultFile");
 const { tilesDestDirectory } = require("./constants");
 const fs = require("fs");
 
@@ -37,7 +36,7 @@ function forEachFile(path, cb) {
     })
 }
 
-const result = getResult();
+const result = {};
 forEachFile(tilesDestDirectory, file => {
     console.log(file);
     const parts = file.split('/');
@@ -55,6 +54,4 @@ forEachFile(tilesDestDirectory, file => {
     } else {
         result[tileID].providers.push(res)
     }
-}).then(() => {
-    writeResult(result);
 });
