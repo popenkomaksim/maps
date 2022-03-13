@@ -1,6 +1,6 @@
 const glob = require('glob');
 const { tilesDestDirectory } = require('./constants');
-const { minZoomLevel, startZoomLevel } = require('./config');
+const { params } = require('./config');
 const fs = require('fs');
 const _ = require('lodash');
 
@@ -76,12 +76,14 @@ const compressFiles = async (files, quality, type) => {
 }
 
 const main = async () => {
-  for(let i = startZoomLevel; startZoomLevel >= minZoomLevel; i--) {
+  const { startZoomLevel, minZoomLevel } = params;
+
+  for(let i = startZoomLevel; i >= minZoomLevel; i--) {
     let files = await getDirectories(`./${tilesDestDirectory}/HERE/${i}`);
     await compressFiles(files, 60, '.png');
   }
 
-  for(let i = startZoomLevel; startZoomLevel >= minZoomLevel; i--) {
+  for(let i = startZoomLevel; i >= minZoomLevel; i--) {
     files = await getDirectories(`./${tilesDestDirectory}/GS/${i}`);
     await compressFiles(files, 60, '.jpeg');
   }
