@@ -31,5 +31,10 @@ function main {
         done
     done
 }
+if ! command -v identify &> /dev/null
+then
+    echo "imagemagick is not installed"
+    exit
+fi
 main &
 wait
