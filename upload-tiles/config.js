@@ -56,6 +56,7 @@ const params = {
   ],
   minZoomLevel: 5,
   startZoomLevel: 18,
+  delay: 0,// milliseconds
   // please put you coords config here:
   startCoords: undefined,
   // for instance:
