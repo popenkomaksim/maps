@@ -45,6 +45,7 @@ const downloadAll = async () => {
     const YCoords = fillCoordsArr(topLeftCoords.y, bottomRightCoords.y);
     const totaltiles = XCoords.length * YCoords.length;
     let count = 0;
+    let failed = 0;
     for (const x of XCoords) {
       for (const y of YCoords) {
         const locationParams = { z, x, y };
@@ -56,10 +57,11 @@ const downloadAll = async () => {
             .map((resource) => download(resource, locationParams))
           );
         } catch (err) {
+          failed++;
           error(err);
         } finally {
           count++;
-          log(`Done: (${((count/totaltiles)*100).toFixed(2)}%) ${count}/${totaltiles}`)
+          log(`Done: (${((count/totaltiles)*100).toFixed(2)}%) ${count}/${totaltiles}; failed: ${failed}`)
         }
 
       }
