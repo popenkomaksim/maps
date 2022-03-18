@@ -49,10 +49,9 @@ const downloadAll = async () => {
     for (const x of XCoords) {
       for (const y of YCoords) {
         const locationParams = { z, x, y };
-        const tileId = [z, x, y].join("-");
 
         try {
-          const ex = await Promise.all(
+          await Promise.all(
             resources
             .map((resource) => download(resource, locationParams))
           );

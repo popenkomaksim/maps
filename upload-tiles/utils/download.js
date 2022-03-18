@@ -1,18 +1,27 @@
 const https = require("https");
+const { params } = require("../config");
 const fs = require("fs");
 const { tilesDestDirectory } = require("../constants");
 const { log } = require("./common");
-const { setFlagsFromString } = require("v8");
-const path = require("path");
 
 const notFound = 'Error 404 (Not Found)';
 
-const download = (resource, locationParams, cb = () => {}) => {
+const delayFunc = (delayMilliseconds) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, delayMilliseconds);
+  });
+}
+
+const download = async (resource, locationParams, cb = () => {}) => {
   const {
     fileExt,
     downloadUrlPatter,
     name: resourceName,
   } = resource;
+
+  const { delay } = params;
   const { x, y, z } = locationParams;
   const dir = `./${tilesDestDirectory}/${resourceName}/${z}/${x}`;
   const dest = `${dir}/${y}.${fileExt}`;
@@ -38,6 +47,8 @@ const download = (resource, locationParams, cb = () => {}) => {
   }
 
   const downloadUrl = downloadUrlPatter(locationParams);
+
+  await delayFunc(delay);
 
   return new Promise((resolve, reject) => {
     log(`Downloading file by URL ${downloadUrl} to dest ${dest}`);
