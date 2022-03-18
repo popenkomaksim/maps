@@ -20,15 +20,13 @@ killall() {
 }
 function main {
     nfiles=0
-    for d in $(ls ./tiles-dest); do
-        for f in $(find "./tiles-dest/$d" -type f); do
-            if test "$(jobs | wc -l)" -ge 64; then
-                wait -n
-            fi
-            ((nfiles+=1))
-            echo -ne "$nfiles%\033[0K\r"
-            checkFile $f &
-        done
+    for f in $(find $1 -type f); do
+        if test "$(jobs | wc -l)" -ge 64; then
+            wait -n
+        fi
+        ((nfiles+=1))
+        echo -ne "$nfiles%\033[0K\r"
+        checkFile $f &
     done
 }
 if ! command -v identify &> /dev/null
@@ -36,5 +34,9 @@ then
     echo "imagemagick is not installed"
     exit
 fi
-main &
+dest="./tiles-dest"
+if [ "$1" ]; then
+    dest=$1
+fi
+main $dest &
 wait

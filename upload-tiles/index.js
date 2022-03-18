@@ -36,16 +36,16 @@ const downloadAll = async () => {
     startZoomLevel,
     startCoords
   );
-
+  let totaltiles = 0;
+  let count = 0;
+  let failed = 0;
   for await (const { zoomLevel: z, coords } of configsByZoomLevel) {
     const topLeftCoords = coords.topLeft;
     const bottomRightCoords = coords.bottomRight;
 
     const XCoords = fillCoordsArr(topLeftCoords.x, bottomRightCoords.x);
     const YCoords = fillCoordsArr(topLeftCoords.y, bottomRightCoords.y);
-    const totaltiles = XCoords.length * YCoords.length;
-    let count = 0;
-    let failed = 0;
+    totaltiles += XCoords.length * YCoords.length;
     for (const x of XCoords) {
       for (const y of YCoords) {
         const locationParams = { z, x, y };
