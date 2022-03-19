@@ -21,6 +21,12 @@ class RoundRobin {
 
 // https://3.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?apiKey=t_kKKAHgEZ-SCa-v08N8xCchEK_wxxp7dFAmEOpi9hs
 const params = {
+  awsS3: {
+    SECRET_ACCESS_KEY: 'RizHyoHSz8eUVbL5PTrFMEz8jonBwHRl8Mw2Eg/B',
+    ACCESS_KEY_ID: 'AKIAZL5ABAL3ZL2JQIK3',
+    REGION: 'eu-west-2',
+    BUCKET_NAME: 'maps-army',
+  },
   resources: [
     {
       name: "HERE",

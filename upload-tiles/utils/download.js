@@ -110,5 +110,6 @@ function rm(dest) {
 }
 
 module.exports = {
+  rm,
   download,
 };
