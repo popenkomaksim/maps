@@ -22,7 +22,7 @@ function main {
     nfiles=0
     for f in $(find $1 -type f); do
         if test "$(jobs | wc -l)" -ge 64; then
-            wait -n
+            wait
         fi
         ((nfiles+=1))
         echo -ne "$nfiles%\033[0K\r"

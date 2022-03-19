@@ -40,6 +40,9 @@ const downloadAll = async () => {
   let count = 0;
   let failed = 0;
   for await (const { zoomLevel: z, coords } of configsByZoomLevel) {
+    if (params.skippedLevels && params.skippedLevels.indexOf(z) >= 0) {
+      continue;
+    }
     const topLeftCoords = coords.topLeft;
     const bottomRightCoords = coords.bottomRight;
 
