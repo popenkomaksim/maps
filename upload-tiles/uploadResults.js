@@ -42,6 +42,12 @@ const main = async () => {
       for(const xCoord of xCoords) {
 
         const yCoords = await getDirectories(`./${tilesDestDirectory}/${source}/${zoom}/${xCoord}`);
+
+        if (yCoords.length < 1) {
+          error(`Empty folder ./${tilesDestDirectory}/${source}/${zoom}/${xCoord}`);
+          continue;
+        }
+
         let yCoordsFrom = yCoords.shift();
         let yCoordsTo = yCoords.pop();
         if (!yCoordsTo) {
