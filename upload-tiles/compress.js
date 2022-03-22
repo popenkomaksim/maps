@@ -59,7 +59,8 @@ const compressFile = async (path, quality = '40', type = '.png') => {
     rm(path);
     console.log(`Converted file ${path}. Fails count: ${failesCount}`);
   } catch(e) {
-    console.log(`Error convert file ${path}`, e);
+    console.log(`Error convert file ${path}. Fails count: ${failesCount}.`, e);
+    rm(path);
     failesCount += 1;
     return false;
   }
