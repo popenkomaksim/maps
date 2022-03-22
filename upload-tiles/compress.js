@@ -5,6 +5,8 @@ const _ = require('lodash');
 
 const { exec } = require('child_process');
 
+let failesCount = 0;
+
 const getDirectories = function (src) {
   return new Promise((resolve, reject) => {
     glob(src + '/**/*', (err, res) => {
@@ -55,9 +57,10 @@ const compressFile = async (path, quality = '40', type = '.png') => {
   try {
     await execPromise(`convert ${path} -quality ${quality} ${filePathWithoutType}.jpg`);
     rm(path);
-    console.log(`Converted file ${path}`)
+    console.log(`Converted file ${path}. Fails count: ${failesCount}`);
   } catch(e) {
     console.log(`Error convert file ${path}`, e);
+    failesCount += 1;
     return false;
   }
 
