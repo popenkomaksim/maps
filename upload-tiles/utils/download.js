@@ -77,11 +77,11 @@ const download = async (resource, locationParams, cb = () => {}) => {
       },
       function (response) {
         if (response.statusCode > 200){
-          if (response.statusCode == 404) {
-            file.write(notFound);
-            file.close(cb);
-            return resolve({resource, coords: { x, y, z }});
-          }
+          //if (response.statusCode == 404) {
+          //  file.write(notFound);
+          //  file.close(cb);
+          //  return resolve({resource, coords: { x, y, z }});
+          //}
           file.close(cb);
           rm(dest);
           return reject(`${downloadUrl} resulted in ${response.statusCode}`);

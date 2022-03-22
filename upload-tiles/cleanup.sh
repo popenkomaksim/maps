@@ -1,11 +1,11 @@
 #!/bin/bash
 function checkFile {
     if [ ! -z "$(identify -regard-warnings $1 2>&1 > /dev/null)" ]; then 
-        is404=$(grep -c 'Error 404 (Not Found)' $1)
-        if [ $is404 -eq 0 ]; then 
+        #is404=$(grep -c 'Error 404 (Not Found)' $1)
+        #if [ $is404 -eq 0 ]; then 
             rm $1
             echo "removing $1"; 
-        fi
+        #fi
     fi
 }
 
