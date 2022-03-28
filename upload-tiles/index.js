@@ -14,7 +14,7 @@ function isFloatPoint({x, y}) {
 }
 
 const downloadAll = async () => {
-  const { minZoomLevel, startZoomLevel, startCoords, resources } = params;
+  const { coordsLevel, minZoomLevel, startZoomLevel, startCoords, resources } = params;
 
 
   if (!startCoords) {
@@ -34,11 +34,17 @@ const downloadAll = async () => {
   const configsByZoomLevel = buildConfigsByZoomLevel(
     minZoomLevel,
     startZoomLevel,
-    startCoords
+    startCoords,
+    coordsLevel
   );
   let totaltiles = 0;
   let count = 0;
   let failed = 0;
+
+  if (!coordsLevel) {
+    coordsLevel = startZoomLevel;
+  }
+
   for await (const { zoomLevel: z, coords } of configsByZoomLevel) {
     if (params.skippedLevels && params.skippedLevels.indexOf(z) >= 0) {
       continue;
