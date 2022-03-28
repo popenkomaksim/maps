@@ -15,13 +15,19 @@ $(function() {
     init() {
       let zoom = this.defaultZoom;
       let center = this.center;
-
+      let activeLayer = '';
       if (window.location.hash !== '') {
         const hash = window.location.hash.replace('#map=', '');
         const parts = hash.split('/');
-        if (parts.length === 3) {
-          zoom = parseFloat(parts[0]);
-          center = [parseFloat(parts[1]), parseFloat(parts[2])];
+        if (parts.length === 4) {
+          activeLayer = parts[0];
+          zoom = parseFloat(parts[1]);
+          center = [parseFloat(parts[2]), parseFloat(parts[3])];
+        }
+      }
+      if (this.layers.filter(l=>l.getVisible()).shift().A.displayName !== activeLayer) {
+        for(let i = 0; i < this.layers.length; i++){
+          this.layers[i].setVisible(this.layers[i].A.displayName === activeLayer);
         }
       }
       const map = new ol.Map({
@@ -52,7 +58,7 @@ $(function() {
 
       let shouldUpdate = true;
       const view = map.getView();
-      const updatePermalink = function () {
+      this.updatePermalink = function () {
         if (!shouldUpdate) {
           // do not update the URL when the view was changed in the 'popstate' handler
           shouldUpdate = true;
@@ -60,13 +66,8 @@ $(function() {
         }
 
         const center = ol.proj.transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
-        const hash =
-          '#map=' +
-          view.getZoom().toFixed(2) +
-          '/' +
-          center[0].toFixed(2) +
-          '/' +
-          center[1].toFixed(2);
+        const activeLayer = map.getAllLayers().filter(l=>l.getVisible()).shift().A.displayName;
+        const hash = '#map=' + [activeLayer, view.getZoom().toFixed(2), center[0].toFixed(2), center[1].toFixed(2)].join('/');
         const state = {
           zoom: view.getZoom(),
           center: view.getCenter(),
@@ -74,7 +75,7 @@ $(function() {
         window.history.pushState(state, 'map', hash);
       };
 
-      map.on('moveend', updatePermalink);
+      map.on('moveend', this.updatePermalink);
 
       // restore the view state when navigating through the history, see
       // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onpopstate
@@ -142,6 +143,7 @@ $(function() {
     setLayer(index) {
       _.forEach(this.layers, function(layer) { layer.setVisible(false); });
       this.layers[index].setVisible(true);
+      this.updatePermalink();
     }
 
     addLayer(layer) {
