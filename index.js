@@ -13,7 +13,18 @@ $(function() {
     }
 
     init() {
-      this.map = new ol.Map({
+      let zoom = this.defaultZoom;
+      let center = this.center;
+
+      if (window.location.hash !== '') {
+        const hash = window.location.hash.replace('#map=', '');
+        const parts = hash.split('/');
+        if (parts.length === 3) {
+          zoom = parseFloat(parts[0]);
+          center = [parseFloat(parts[1]), parseFloat(parts[2])];
+        }
+      }
+      const map = new ol.Map({
         target: 'map',
         interactions: ol.interaction.defaults().extend([new ol.interaction.DragRotateAndZoom()]),
         layers: this.layers,
@@ -29,7 +40,7 @@ $(function() {
           new ol.control.ScaleLine(),
         ],
         view: new ol.View({
-          center: ol.proj.transform(this.center, 'EPSG:4326', 'EPSG:3857'),
+          center: ol.proj.transform(center, 'EPSG:4326', 'EPSG:3857'),
           zoom: this.defaultZoom
         }),
       });
@@ -39,6 +50,43 @@ $(function() {
         container: '#map',
       });
 
+      let shouldUpdate = true;
+      const view = map.getView();
+      const updatePermalink = function () {
+        if (!shouldUpdate) {
+          // do not update the URL when the view was changed in the 'popstate' handler
+          shouldUpdate = true;
+          return;
+        }
+
+        const center = ol.proj.transform(view.getCenter(), 'EPSG:3857', 'EPSG:4326');
+        const hash =
+          '#map=' +
+          view.getZoom().toFixed(2) +
+          '/' +
+          center[0].toFixed(2) +
+          '/' +
+          center[1].toFixed(2);
+        const state = {
+          zoom: view.getZoom(),
+          center: view.getCenter(),
+        };
+        window.history.pushState(state, 'map', hash);
+      };
+
+      map.on('moveend', updatePermalink);
+
+      // restore the view state when navigating through the history, see
+      // https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onpopstate
+      window.addEventListener('popstate', function (event) {
+        if (event.state === null) {
+          return;
+        }
+        map.getView().setCenter(event.state.center);
+        map.getView().setZoom(event.state.zoom);
+        shouldUpdate = false;
+      });
+      this.map = map;
       return this.map;
     }
 
