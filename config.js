@@ -2,8 +2,8 @@ const config = {
   layers: [{
       projection: 'EPSG:3857',
       source: new ol.source.OSM({
-        // url: './maps/google/{z}/{x}/{y}.png',
-        url: 'https://khms0.googleapis.com/kh?v=917&hl=en-US&x={x}&y={y}&z={z}',
+        url: './maps/GS/{z}/{x}/{y}.png',
+        // url: 'https://khms0.googleapis.com/kh?v=917&hl=en-US&x={x}&y={y}&z={z}',
         crossOrigin: null
       }),
       displayName: 'GS',
@@ -12,8 +12,8 @@ const config = {
     {
       projection: 'EPSG:3857',
       source: new ol.source.OSM({
-        // url: './maps/google/{z}/{x}/{y}.png',
-        url: 'https://b.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
+        url: './maps/COSM/{z}/{x}/{y}.png',
+        // url: 'https://b.tile-cyclosm.openstreetmap.fr/cyclosm/{z}/{x}/{y}.png',
         crossOrigin: null
       }),
       displayName: 'COSM',
@@ -22,9 +22,8 @@ const config = {
     {
       projection: 'EPSG:3857',
       source: new ol.source.OSM({
-        // url: './maps/openStreetMap/{z}/{x}/{y}.png',
-
-        url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        url: './maps/OSM/{z}/{x}/{y}.png',
+        // url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
         crossOrigin: null
       }),
       displayName: 'OSM',
@@ -33,9 +32,8 @@ const config = {
     {
       projection: 'EPSG:3857',
       source: new ol.source.OSM({
-        // url: './maps/openStreetMap/{z}/{x}/{y}.png',
-
-        url: 'https://3.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?apiKey=t_kKKAHgEZ-SCa-v08N8xCchEK_wxxp7dFAmEOpi9hs',
+        url: './maps/HERE/{z}/{x}/{y}.png',
+        // url: 'https://3.aerial.maps.ls.hereapi.com/maptile/2.1/maptile/newest/satellite.day/{z}/{x}/{y}/256/png8?apiKey=t_kKKAHgEZ-SCa-v08N8xCchEK_wxxp7dFAmEOpi9hs',
         crossOrigin: null
       }),
       displayName: 'HERE',
