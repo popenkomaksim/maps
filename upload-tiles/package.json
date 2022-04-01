@@ -2,6 +2,7 @@
   "name": "upload-tiles",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "compress": "node compress.js",
@@ -14,9 +15,13 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.1096.0",
-    "lodash.times": "^4.3.2",
+    "bluebird": "^3.7.2",
+    "glob": "^7.2.0",
+    "globby": "^13.1.1",
     "lodash": "^4.17.15",
+    "lodash.times": "^4.3.2",
     "minimist": "^1.2.5",
-    "glob": "^7.2.0"
+    "node-unzip-2": "^0.2.8",
+    "yauzl": "^2.10.0"
   }
 }
